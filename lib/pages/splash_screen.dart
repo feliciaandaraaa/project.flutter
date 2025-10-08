@@ -49,16 +49,20 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: const Color.fromARGB(255, 183, 183, 183),
       body: Center(
         child: FadeTransition(
-          opacity: _fadeAnimation, 
+          opacity: _fadeAnimation,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // 🔹 Logo
               Image.asset(
                 "assets/images/f.png",
                 width: 250,
                 height: 250,
               ),
+
               const SizedBox(height: 20),
+
+              // 🔹 Nama aplikasi
               const Text(
                 "aadr'sBilliard & Café",
                 style: TextStyle(
@@ -66,6 +70,14 @@ class _SplashScreenState extends State<SplashScreen>
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // 🔹 Loading indicator
+              const CircularProgressIndicator(
+                color: Colors.black, // bisa ubah warna di sini
+                strokeWidth: 3,
               ),
             ],
           ),

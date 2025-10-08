@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'menu_page.dart';
-import 'models/order.dart';
+import '../models/order.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});

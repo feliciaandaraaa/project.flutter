@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models/order.dart';
+import '../models/order.dart';
 
 class OrderStatusPage extends StatelessWidget {
   const OrderStatusPage({super.key});

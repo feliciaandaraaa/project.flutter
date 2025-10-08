@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'register_page.dart';
-import 'models/user.dart';
+import '../models/user.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
