@@ -1,58 +1,41 @@
 import 'package:flutter/material.dart';
-import 'checkout_page.dart';
-import 'menu_page.dart';
+import '../models/menu_item.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({super.key});
+  final List<MenuItem> cartItems;
 
-  double getTotal() {
-    return cart.fold(0, (sum, item) => sum + item.price);
-  }
+  const CartPage({super.key, required this.cartItems});
 
   @override
   Widget build(BuildContext context) {
+    int total = cartItems.fold(0, (sum, item) => sum + item.price);
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Keranjang")),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: cart.length,
+      appBar: AppBar(
+        title: const Text('Keranjang'),
+      ),
+      body: cartItems.isEmpty
+          ? const Center(child: Text('Keranjang masih kosong'))
+          : ListView.builder(
+              itemCount: cartItems.length,
               itemBuilder: (context, index) {
-                var item = cart[index];
+                final item = cartItems[index];
                 return ListTile(
+                  leading: Image.asset(item.image, width: 50, height: 50),
                   title: Text(item.name),
-                  subtitle: Text("Rp ${item.price}"),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      cart.removeAt(index);
-                      (context as Element).markNeedsBuild();
-                    },
-                  ),
+                  trailing: Text('Rp${item.price}'),
                 );
               },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Text("Total: Rp ${getTotal()}"),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    if (cart.isNotEmpty) {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const CheckoutPage()));
-                    }
-                  },
-                  child: const Text("Checkout"),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      bottomNavigationBar: cartItems.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'Total: Rp$total',
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            )
+          : null,
     );
   }
 }

@@ -1,14 +1,9 @@
 import 'menu_item.dart';
 
-enum OrderStatus { pending, confirmed, completed }
-
 class Order {
-  List<MenuItem> items;
-  double total;
-  OrderStatus status;
+  final List<MenuItem> items;
+  final double totalPrice;
 
-  Order(this.items, this.total, {this.status = OrderStatus.pending});
+  Order({required this.items})
+      : totalPrice = items.fold(0, (sum, item) => sum + item.price);
 }
-
-// daftar pesanan global
-List<Order> orders = [];

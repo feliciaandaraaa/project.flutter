@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Billiard & Caffe App',
       debugShowCheckedModeBanner: false,
-      title: "Billiard & Café",
-      theme: ThemeData(primarySwatch: Colors.brown),
-      home: SplashScreen(),
+      theme: ThemeData(primarySwatch: Colors.green),
+      home: const SplashScreen(),
     );
   }
 }

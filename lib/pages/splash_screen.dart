@@ -1,86 +1,54 @@
+// pages/splash_screen.dart
+
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'login_page.dart'; // Pastikan file ini ada
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key});
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    // 🔥 Fade-in animation
-    _controller = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this,
-    )..forward();
-
-    _fadeAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    );
-
-    // ⏳ Pindah ke LoginPage setelah 3 detik
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => LoginPage()),
-      );
+      if (mounted) {
+        // Asumsi: LoginPage memiliki constructor default
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+      }
     });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 183, 183, 183),
+      backgroundColor: Colors.white,
       body: Center(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // 🔹 Logo
-              Image.asset(
-                "assets/images/f.png",
-                width: 250,
-                height: 250,
-              ),
-
-              const SizedBox(height: 20),
-
-              // 🔹 Nama aplikasi
-              const Text(
-                "aadr'sBilliard & Café",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // 🔹 Loading indicator
-              const CircularProgressIndicator(
-                color: Colors.black, // bisa ubah warna di sini
-                strokeWidth: 3,
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/images/f.png', width: 180, height: 180),
+            const SizedBox(height: 20),
+            const Text(
+              "Billiard Caffe App",
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.blueAccent),
+            ),
+            const SizedBox(height: 10),
+            const Text("Tempat seru, nikmati kopi dan billiard!", style: TextStyle(color: Colors.black54)),
+            
+            // Indikator Loading
+            const SizedBox(height: 40),
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+              strokeWidth: 4,
+            ),
+          ],
         ),
       ),
     );

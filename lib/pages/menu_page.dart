@@ -1,110 +1,110 @@
-import 'package:flutter/material.dart';
-import '../models/menu_item.dart';
-import '../widgets/menu_card.dart';
+// pages/menu_page.dart
 
-// Global keranjang
-List<MenuItem> cart = [];
+import 'package:flutter/material.dart';
+
+// ====================================================================
+// Bagian 1 & 2: Definisi Model dan Data (Salin dari bagian 2 di atas)
+// ====================================================================
+
+// (SALIN SEMUA CLASS DAN LIST menuItems DI SINI)
+
+class MenuItem {
+  String name;
+  double price;
+  String imagePath;
+
+  MenuItem(this.name, this.price, this.imagePath);
+}
+
+class Food extends MenuItem {
+  Food(String name, double price, String imagePath)
+      : super(name, price, imagePath);
+}
+
+class Drink extends MenuItem {
+  Drink(String name, double price, String imagePath)
+      : super(name, price, imagePath);
+}
+
+List<MenuItem> menuItems = [
+  Food("Nasi Goreng", 20000, "assets/images/nasi_goreng.png"),
+  Food("Mie Goreng", 18000, "assets/images/mie_goreng.png"),
+  Food("Ricebowl", 20000, "assets/images/ricebowl.png"),
+  Food("Spaghetti", 25000, "assets/images/spaghetti.png"),
+  Drink("Es Teh", 5000, "assets/images/es_teh.png"),
+  Drink("Lemon Tea", 7000, "assets/images/lemon_tea.png"),
+  Drink("Kopi Hitam", 8000, "assets/images/kopi_hitam.png"),
+  Drink("Cappuccino", 10000, "assets/images/cappuccino.png"),
+  Drink("Thai Tea", 12000, "assets/images/thai_tea.png"),
+  Drink("Matcha", 12000, "assets/images/matcha.png"),
+];
+
+// ====================================================================
+// Bagian 3: Widget MenuPage (Dengan Kait Add to Cart)
+// ====================================================================
 
 class MenuPage extends StatelessWidget {
-  const MenuPage({super.key});
+  final Function(MenuItem item) onAddToCart;
+  
+  const MenuPage({super.key, required this.onAddToCart});
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2, // ada 2 tab: makanan & minuman
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Menu Café"),
-          backgroundColor: const Color.fromARGB(255, 240, 239, 239),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Keranjang masih kosong 😅")),
-                );
-              },
-            ),
-          ],
-          bottom: const TabBar(
-            indicatorColor: Colors.black,
-            tabs: [
-              Tab(text: "Makanan", icon: Icon(Icons.fastfood)),
-              Tab(text: "Minuman", icon: Icon(Icons.local_drink)),
-            ],
+    final List<MenuItem> foods = menuItems.whereType<Food>().toList();
+    final List<MenuItem> drinks = menuItems.whereType<Drink>().toList();
+
+    return ListView(
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      children: [
+        _buildMenuCategory('🍽️ Makanan Berat', foods, onAddToCart),
+        _buildMenuCategory('☕ Minuman & Kopi', drinks, onAddToCart),
+      ],
+    );
+  }
+
+  Widget _buildMenuCategory(String title, List<MenuItem> items, Function(MenuItem item) onAddToCart) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueAccent),
           ),
         ),
-        body: const TabBarView(
-          children: [
-            FoodTab(),
-            DrinkTab(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class FoodTab extends StatelessWidget {
-  const FoodTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var foodItems = menuItems.where((item) => item is Food).toList();
-
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: foodItems.length,
-      itemBuilder: (context, index) {
-        var item = foodItems[index];
-        return MenuCard(
-          item: item,
-          onAdd: () {
-            cart.add(item);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("${item.name} ditambahkan ke keranjang")),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class DrinkTab extends StatelessWidget {
-  const DrinkTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var drinkItems = menuItems.where((item) => item is Drink).toList();
-
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: drinkItems.length,
-      itemBuilder: (context, index) {
-        var item = drinkItems[index];
-        return MenuCard(
-          item: item,
-          onAdd: () {
-            cart.add(item);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("${item.name} ditambahkan ke keranjang")),
-            );
-          },
-        );
-      },
+        ...items.map((item) => Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          elevation: 2,
+          child: ListTile(
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset(
+                item.imagePath,
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 60, height: 60,
+                    decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(8.0)),
+                    child: const Icon(Icons.fastfood, size: 30, color: Colors.grey),
+                  );
+                },
+              ),
+            ),
+            title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('Harga: Rp ${item.price.toStringAsFixed(0)}'),
+            trailing: IconButton(
+              icon: const Icon(Icons.add_shopping_cart, color: Colors.green),
+              onPressed: () {
+                onAddToCart(item); // 🔥 Panggilan Add to Cart
+              },
+            ),
+          ),
+        )).toList(),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }
